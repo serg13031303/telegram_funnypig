@@ -13,7 +13,7 @@ openai.api_key = OPENAI_API_KEY
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Я GPT-бот. Напиши мне что-нибудь.")
+    await update.message.reply_text("Привет! Я GPT-бот МНОГО НОУТБУКОВ. Напиши мне что-нибудь.")
 
 # Обработка сообщений
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
