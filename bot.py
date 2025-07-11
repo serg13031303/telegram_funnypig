@@ -11,7 +11,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Я GPT-бот. Напиши мне что-нибудь.")
+    await update.message.reply_text("Привет! Я GPT-бот МНОГО НОУТБУКОВ. Напиши мне что-нибудь.")
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
