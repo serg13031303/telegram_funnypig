@@ -22,7 +22,7 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         reply = response.choices[0].message.content.strip()
     except Exception as e:
-        reply = f"Произошла ошибка: {e}"
+        reply = f"Ошибка: {str(e)}"
     await update.message.reply_text(reply)
 
 app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
