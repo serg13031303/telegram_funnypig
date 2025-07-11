@@ -1,33 +1,34 @@
+import logging
 import os
 import openai
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
-from dotenv import load_dotenv
+from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, CommandHandler, filters
 
-load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-openai.api_key = OPENAI_API_KEY
+logging.basicConfig(level=logging.INFO)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Я GPT-бот МНОГО НОУТБУКОВ. Напиши мне что-нибудь.")
+    await update.message.reply_text("Привет! Я GPT-бот. Напиши мне что-нибудь.")
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_message = update.message.text
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI()  # создаём объект клиента
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": user_message}]
+            messages=[{"role": "user", "content": update.message.text}]
         )
-        reply = response.choices[0].message.content.strip()
+        reply = response.choices[0].message.content
     except Exception as e:
         reply = f"Ошибка: {str(e)}"
+
     await update.message.reply_text(reply)
 
-app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+if _name_ == "_main_":
+    from dotenv import load_dotenv
+    load_dotenv()
 
-print("Бот запущен!")
-app.run_polling()
+    app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+    app.run_polling(allowed_updates=Update.ALL_TYPES, timeout=60)
